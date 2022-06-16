@@ -179,6 +179,8 @@ def exitFn():
         Store.child('backwardRight').set('STOP')
         Store.child('forwardLeft').set('STOP')
         Store.child('forwardRight').set('STOP')
+        Store.child('speed').set(50)
+        Store.child('lights').set('off')
     except Exception as e:
         print(e)
         print('Failed to set reset values')
