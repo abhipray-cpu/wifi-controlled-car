@@ -34,12 +34,12 @@ pinMode(IN_1,OUTPUT);
 pinMode(IN_2,OUTPUT);
 pinMode(IN_3,OUTPUT);
 pinMode(IN_4,OUTPUT);
-analogWrite(ENA,0);
-analogWrite(ENB,0);
-digitalWrite(IN_1,LOW);
-digitalWrite(IN_2,LOW);
-digitalWrite(IN_3,LOW);
-digitalWrite(IN_4,LOW);
+digitalWrite(ENA,LOW);
+digitalWrite(ENB,LOW);
+digitalWrite(MotorA1,LOW);
+digitalWrite(MotorA2,LOW);
+digitalWrite(MotorB1,LOW);
+digitalWrite(MotorB2,LOW);
 Serial.println("Starting our bot!!");
 myServo1.attach(16); //this is the axis1
 myServo2.attach(5); //this is the axis2
@@ -64,68 +64,7 @@ void loop()
   moveAxis1();
 moveAxis2();
 speedFn();
-      Serial.println("Moving bot in the back direction!");
-      digitalWrite(IN_1, HIGH);
-      digitalWrite(IN_2, LOW);
-      analogWrite(ENA, speedCar);
-
-      digitalWrite(IN_3, HIGH);
-      digitalWrite(IN_4, LOW);
-      analogWrite(ENB, speedCar);
-    delay(10000);
-     Serial.print("Moving bot in FORWARD direction!");
-     digitalWrite(IN_1, LOW);
-      digitalWrite(IN_2, HIGH);
-      analogWrite(ENA, speedCar);
-
-      digitalWrite(IN_3, LOW);
-      digitalWrite(IN_4, HIGH);
-      analogWrite(ENB, speedCar);
-   
-    delay(10000);
-       Serial.print("Moving bot in  LEFT direction!");
-        digitalWrite(IN_1, LOW);
-      digitalWrite(IN_2, HIGH);
-      analogWrite(ENA, speedCar);
-
-      digitalWrite(IN_3, HIGH);
-      digitalWrite(IN_4, LOW);
-      analogWrite(ENB, speedCar);
-      
-     delay(10000);
-       Serial.print("Moving bot in RIGHT direction!");
-       
-      digitalWrite(IN_1, HIGH);
-      digitalWrite(IN_2, LOW);
-      analogWrite(ENA, speedCar);
-
-      digitalWrite(IN_3, LOW);
-      digitalWrite(IN_4, HIGH);
-      analogWrite(ENB, speedCar);
-     
-      delay(10000);
-      Serial.println("Stopping the bot!");
-      digitalWrite(IN_1, LOW);
-      digitalWrite(IN_2, LOW);
-      analogWrite(ENA, speedCar);
-
-      digitalWrite(IN_3, LOW);
-      digitalWrite(IN_4, LOW);
-      analogWrite(ENB, speedCar);
-    
-    delay(10000);
-    
- delay(10000);
-    digitalWrite(IN_1, LOW);
-      digitalWrite(IN_2, LOW);
-      analogWrite(ENA, speedCar);
-
-      digitalWrite(IN_3, LOW);
-      digitalWrite(IN_4, LOW);
-      analogWrite(ENB, speedCar);
-  delay(10000);
-     
-
+motorController();
  }
 void moveAxis1()
 {
@@ -148,23 +87,100 @@ void moveAxis2()
      }
   }
 
-void goAhead(){ 
-
+// this functions will control the motors of the bot
+ void motorController()
+ {
+   if (Firebase.getString(firebaseData, "/bot/direction")){
+    String value = firebaseData.stringData();
+    if(value == "BACKWARD")
+    {
+      Serial.println("Moving bot in the back direction!");
+      goBack();
+    
+      }
+     else if(value == "FORWARD")
+   {
+     Serial.print("Moving bot in FORWARD direction!");
+     goAhead();
+   
+    }
+    else if(value == "LEFT")
+    {
+       Serial.print("Moving bot in  LEFT direction!");
+       goLeft();
       
+      }
+    else if(value == "RIGHT")
+    {
+       Serial.print("Moving bot in RIGHT direction!");
+       goRight();
+     
+      }
+    else if(value == "STOP")
+    {
+      Serial.println("Stopping the bot!");
+      stopRobot();
+    
+    }
+    else if(value == "ANTI")
+    {
+      Serial.println("Moving the bot anticlockwise!");
+   
+      }
+     else if(value == "CLOCK")
+     {
+      Serial.println("Moving the bot clockwise!");
+   
+      }
+     else
+     {
+    
+  }
+     }
+ }
+
+ void goAhead(){ 
+
+      digitalWrite(IN_1, LOW);
+      digitalWrite(IN_2, HIGH);
+      analogWrite(ENA, speedCar);
+
+      digitalWrite(IN_3, LOW);
+      digitalWrite(IN_4, HIGH);
+      analogWrite(ENB, speedCar);
   }
 
 void goBack(){ 
 
-      
+      digitalWrite(IN_1, HIGH);
+      digitalWrite(IN_2, LOW);
+      analogWrite(ENA, speedCar);
+
+      digitalWrite(IN_3, HIGH);
+      digitalWrite(IN_4, LOW);
+      analogWrite(ENB, speedCar);
   }
 
 void goRight(){ 
 
+      digitalWrite(IN_1, HIGH);
+      digitalWrite(IN_2, LOW);
+      analogWrite(ENA, speedCar);
+
+      digitalWrite(IN_3, LOW);
+      digitalWrite(IN_4, HIGH);
+      analogWrite(ENB, speedCar);
   }
 
 void goLeft(){
 
-     
+      digitalWrite(IN_1, LOW);
+      digitalWrite(IN_2, HIGH);
+      analogWrite(ENA, speedCar);
+
+      digitalWrite(IN_3, HIGH);
+      digitalWrite(IN_4, LOW);
+      analogWrite(ENB, speedCar);
   }
 
 void goAheadRight(){
@@ -213,5 +229,11 @@ void goBackLeft(){
 
 void stopRobot(){  
 
-      
+      digitalWrite(IN_1, LOW);
+      digitalWrite(IN_2, LOW);
+      analogWrite(ENA, speedCar);
+
+      digitalWrite(IN_3, LOW);
+      digitalWrite(IN_4, LOW);
+      analogWrite(ENB, speedCar);
  }
